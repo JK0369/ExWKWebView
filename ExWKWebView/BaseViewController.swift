@@ -41,7 +41,7 @@ class BaseViewController: UIViewController {
         return UIImage(named: "CloseButton")
     }()
 
-    private lazy var towardButtonImage: UIImage? = {
+    private lazy var forwardButtonImage: UIImage? = {
         return UIImage(systemName: "chevron.right")
     }()
 
@@ -50,9 +50,9 @@ class BaseViewController: UIViewController {
         return UIBarButtonItem(image: backButtonImage, style: .plain, target: self, action: #selector(didTapToolBarBackButton))
     }()
 
-    lazy var barTowardButtonItem: UIBarButtonItem = {
+    lazy var barForwardButtonItem: UIBarButtonItem = {
         // 주의: UIBarButtonItem을 생성할 때 CustomView로 button을 넣을경우 하나만 표출되므로 image로 넣어서 사용
-        return UIBarButtonItem(image: towardButtonImage, style: .plain, target: self, action: #selector(didTapToolBarTowardButton))
+        return UIBarButtonItem(image: forwardButtonImage, style: .plain, target: self, action: #selector(didTapToolBarForwardButton))
     }()
 
     override func viewDidLoad() {
@@ -83,7 +83,7 @@ class BaseViewController: UIViewController {
     func addBottomToolBar() {
         let paddingButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         paddingButtonItem.width = 24.0
-        toolbarItems = [barBackButtonItem, paddingButtonItem, barTowardButtonItem]
+        toolbarItems = [barBackButtonItem, paddingButtonItem, barForwardButtonItem]
         navigationController?.isToolbarHidden = false
     }
 
@@ -91,7 +91,7 @@ class BaseViewController: UIViewController {
         // override this method
     }
 
-    @objc func didTapToolBarTowardButton() {
+    @objc func didTapToolBarForwardButton() {
         // override this method
     }
 }

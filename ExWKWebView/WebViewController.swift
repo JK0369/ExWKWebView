@@ -62,7 +62,7 @@ class WebViewController: BaseViewController {
         webView.goBack()
     }
 
-    override func didTapToolBarTowardButton() {
+    override func didTapToolBarForwardButton() {
         webView.goForward()
     }
 
@@ -75,7 +75,7 @@ extension WebViewController: WKNavigationDelegate {
         print("show loading indicator ...")
         // didFinish에 하지 않고 didCommit에 해야 페이지에 들어가면서 자연스럽게 활성화
         barBackButtonItem.isEnabled = webView.canGoBack
-        barTowardButtonItem.isEnabled = webView.canGoForward
+        barForwardButtonItem.isEnabled = webView.canGoForward
     }
 
     /// WKWebView에서 다른곳으로 이동된 후에 호출되는 메소드 (didCommit와 짝꿍)
