@@ -82,28 +82,4 @@ extension WebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         print("hide loading indicator ...")
     }
-
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        // TODO: handleError(error)
-    }
-
-    // WebView로부터 딥링크 처리에 이용
-    func webView(_ webView: WKWebView,
-                 decidePolicyFor navigationAction: WKNavigationAction,
-                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        guard let url = navigationAction.request.url else { return }
-        if url.scheme == "mailto" || url.scheme == "tel", UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            decisionHandler(.cancel)
-            return
-        }
-        decisionHandler(.allow)
-    }
-}
-
-// 페이지의 start, loading, finish, error와 같은 action 이벤트 수신 (Javascript interface 사용)
-extension WebViewController: WKScriptMessageHandler {
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        // TODO: message.body 값을 파싱하여 javascript interface action처리
-    }
 }
