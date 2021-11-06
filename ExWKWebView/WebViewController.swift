@@ -19,7 +19,6 @@ class WebViewController: BaseViewController {
     private lazy var webView: WKWebView = {
         let webview = WKWebView(frame: .zero)
         webview.allowsBackForwardNavigationGestures = true
-        webview.uiDelegate = self
         webview.navigationDelegate = self
         return webview
     }()
@@ -60,34 +59,28 @@ class WebViewController: BaseViewController {
     }
 
     override func didTapToolBarBackButton() {
-
+        webView.goBack()
     }
 
     override func didTapToolBarTowardButton() {
-
+        webView.goForward()
     }
 
-}
-
-// webView의 특정 action에 대한 이벤트 수신
-extension WebViewController: WKUIDelegate {
-    func webViewDidClose(_ webView: WKWebView) {
-        navigationController?.popViewController(animated: true)
-    }
 }
 
 // 페이지의 화면 전환 이벤트 수신
 extension WebViewController: WKNavigationDelegate {
     /// WKWebView에서 다른곳으로 이동할때마다 호출되는 메소드 (didFinish와 짝꿍)
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-        // TODO: showIndicator
-        print("start loading ...")
+        print("show loading indicator ...")
+        // didFinish에 하지 않고 didCommit에 해야 페이지에 들어가면서 자연스럽게 활성화
+        barBackButtonItem.isEnabled = webView.canGoBack
+        barTowardButtonItem.isEnabled = webView.canGoForward
     }
 
     /// WKWebView에서 다른곳으로 이동된 후에 호출되는 메소드 (didCommit와 짝꿍)
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        // TODO: hideIndicator
-        print("stop loading ...")
+        print("hide loading indicator ...")
     }
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {

@@ -29,46 +29,31 @@ class BaseViewController: UIViewController {
         return label
     }()
 
-    lazy var toolBarBackButton: UIButton = {
-        let toolBarBackButton = UIButton()
-        toolBarBackButton.setImage(backButtonImage, for: .normal)
-        toolBarBackButton.addTarget(self, action: #selector(didTapToolBarBackButton), for: .touchUpInside)
-        return toolBarBackButton
-    }()
-
-    lazy var toolBarTowardButton: UIButton = {
-        let toolBarTowardButton = UIButton()
-        toolBarTowardButton.setImage(backButtonImage, for: .normal)
-        toolBarTowardButton.addTarget(self, action: #selector(didTapToolBarTowardButton), for: .touchUpInside)
-        return toolBarBackButton
-    }()
-
-    lazy var navigationBackButtonImage: UIImage? = {
+    private lazy var navigationBackButtonImage: UIImage? = {
         return UIImage(systemName: "LeftBackButton")
     }()
 
-    lazy var backButtonImage: UIImage? = {
+    private lazy var backButtonImage: UIImage? = {
         return UIImage(systemName: "chevron.left")
     }()
 
-    lazy var closeButtonImage: UIImage? = {
+    private lazy var closeButtonImage: UIImage? = {
         return UIImage(named: "CloseButton")
     }()
 
-    lazy var towardButtonImage: UIImage? = {
-        return UIImage(named: "chevron.right")
+    private lazy var towardButtonImage: UIImage? = {
+        return UIImage(systemName: "chevron.right")
     }()
 
-//    private lazy var bottomToolBar: UIToolbar = {
-//        let bar = UIToolbar()
-//        view.addSubview(bar)
-//        bar.translatesAutoresizingMaskIntoConstraints = false
-//        bar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-//        bar.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-//        bar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-//        bar.heightAnchor.constraint(equalToConstant: 44).isActive = true
-//        return bar
-//    }()
+    lazy var barBackButtonItem: UIBarButtonItem = {
+        // 주의: UIBarButtonItem을 생성할 때 CustomView로 button을 넣을경우 하나만 표출되므로 image로 넣어서 사용
+        return UIBarButtonItem(image: backButtonImage, style: .plain, target: self, action: #selector(didTapToolBarBackButton))
+    }()
+
+    lazy var barTowardButtonItem: UIBarButtonItem = {
+        // 주의: UIBarButtonItem을 생성할 때 CustomView로 button을 넣을경우 하나만 표출되므로 image로 넣어서 사용
+        return UIBarButtonItem(image: towardButtonImage, style: .plain, target: self, action: #selector(didTapToolBarTowardButton))
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,13 +78,12 @@ class BaseViewController: UIViewController {
         closeButton.isHidden = isHide
     }
 
-    func addBottomToolBar() {
-        let barBackButtonItem = UIBarButtonItem(customView: toolBarBackButton)
-        let barTowardButtonItem = UIBarButtonItem(customView: toolBarTowardButton)
+    // MARK: - UIToolBar
 
-        // 주의: toolbarItems이나 setToolbarItems(_:animated:) 둘 중하나만 실행 시 표출 안되는 현상
-        setToolbarItems([barBackButtonItem, barTowardButtonItem], animated: true)
-        toolbarItems = [barBackButtonItem, barTowardButtonItem]
+    func addBottomToolBar() {
+        let paddingButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        paddingButtonItem.width = 24.0
+        toolbarItems = [barBackButtonItem, paddingButtonItem, barTowardButtonItem]
         navigationController?.isToolbarHidden = false
     }
 
