@@ -8,6 +8,11 @@
 import UIKit
 import WebKit
 
+enum WebAction: String {
+    case changeStatusBarColor
+    case goBack
+}
+
 protocol WebViewDelegate: AnyObject {
 
 }
@@ -61,12 +66,23 @@ class WebViewController: BaseViewController {
 
     private func setupWebView() {
         let configuration = WKWebViewConfiguration()
+
+        // Cookie
         if let authCookie = authCookie {
             let dataStore = WKWebsiteDataStore.nonPersistent()
             dataStore.httpCookieStore.setCookie(authCookie)
             configuration.websiteDataStore = dataStore
         }
 
+        // Swift가 Javascript에게 testJavascriptMethod() 호출 요청
+        let userScript = WKUserScript(source: "testJavascriptMethod()", injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        let contentController = WKUserContentController()
+        contentController.addUserScript(userScript)
+
+        // Swift에 JavaScript 인터페이스 연결
+        contentController.add(self, name: "MyJavaCriptInterfaces") // delegate 할당
+
+        configuration.userContentController = contentController
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.allowsBackForwardNavigationGestures = true
         webView.navigationDelegate = self
@@ -128,5 +144,26 @@ extension WebViewController: WKNavigationDelegate {
 
         // url이 네이티브에서 여는작업이 아닌 경우, webView에서 열리도록 .allow
         decisionHandler(.allow)
+    }
+}
+
+// JavaScript > Swift
+extension WebViewController: WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.name == "MyJavaCriptInterfaces",
+              let messages = message.body as? [String: Any],
+              let action = messages["action"] as? String else { return }
+
+        let webAction = WebAction(rawValue: action)
+        switch webAction {
+        case .changeStatusBarColor:
+            if let color = messages["bgColor"] as? String {
+                print("change status bar color = \(color)")
+            }
+        case .goBack:
+            print("goBack")
+        default:
+            print("undefined action")
+        }
     }
 }
