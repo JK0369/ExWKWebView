@@ -80,7 +80,7 @@ class WebViewController: BaseViewController {
         contentController.addUserScript(userScript)
 
         // Swift에 JavaScript 인터페이스 연결
-        contentController.add(self, name: "MyJavaCriptInterfaces") // delegate 할당
+        contentController.add(self, name: "MyJavaScriptInterfaces") // delegate 할당
 
         configuration.userContentController = contentController
         webView = WKWebView(frame: .zero, configuration: configuration)
@@ -150,7 +150,7 @@ extension WebViewController: WKNavigationDelegate {
 // JavaScript > Swift
 extension WebViewController: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        guard message.name == "MyJavaCriptInterfaces",
+        guard message.name == "MyJavaScriptInterfaces",
               let messages = message.body as? [String: Any],
               let action = messages["action"] as? String else { return }
 
